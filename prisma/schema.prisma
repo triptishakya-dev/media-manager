@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// prisma/schema.prisma
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  mediaItems MediaItem[]
+  screens   Screen[]
+  createdAt DateTime @default(now())
+}
+
+model MediaItem {
+  id        String    @id @default(cuid())
+  name      String
+  type      MediaType // VIDEO, IMAGE, PDF
+  url       String    // Cloudinary/UploadThing URL
+  size      Int
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  screenAssignments ScreenMedia[]
+  createdAt DateTime  @default(now())
+}
+
+enum MediaType {
+  VIDEO
+  IMAGE
+  PDF
+}
+
+model Screen {
+  id        String   @id @default(cuid())
+  name      String   // "Screen 1", "SC1", custom name
+  position  Int      // 1-6
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  media     ScreenMedia[]
+}
+
+model ScreenMedia {
+  id          String    @id @default(cuid())
+  screenId    String
+  mediaItemId String
+  order       Int       @default(0)  // playlist order
+  screen      Screen    @relation(fields: [screenId], references: [id])
+  mediaItem   MediaItem @relation(fields: [mediaItemId], references: [id])
+  assignedAt  DateTime  @default(now())
+}
+
+
+
+
+
