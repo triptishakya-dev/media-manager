@@ -1,5 +1,6 @@
 import { prisma } from "@/app/lib/prisma"
 import { notFound } from "next/navigation"
+import ScreenSlider from "./ScreenSlider"
 
 export default async function ScreenViewPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -18,13 +19,7 @@ export default async function ScreenViewPage({ params }: { params: Promise<{ id:
   return (
     <div className="min-h-screen bg-black flex flex-col items-center justify-center gap-6 p-8">
       <h1 className="text-white text-sm uppercase tracking-widest">{screen.name}</h1>
-      <div className="flex flex-wrap gap-4 justify-center">
-        {screen.media.map((sm: any) => (
-          <div key={sm.id} className="w-48 h-32 bg-[#7a3118] rounded-xl flex items-end p-3">
-            <span className="text-[#f0a07a] text-xs truncate w-full">{sm.mediaItem.name}</span>
-          </div>
-        ))}
-      </div>
+      <ScreenSlider mediaItems={screen.media} />
     </div>
   )
 }
