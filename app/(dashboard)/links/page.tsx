@@ -7,9 +7,10 @@ export default function LinksPage() {
   const [preview, setPreview] = useState<any>(null)
   const [copied, setCopied] = useState<string | null>(null)
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || ""
+  const [baseUrl, setBaseUrl] = useState("")
 
   useEffect(() => {
+    setBaseUrl(window.location.origin)
     fetch("/api/screens")
       .then(res => {
         if (!res.ok) return
@@ -38,7 +39,15 @@ export default function LinksPage() {
               onClick={() => setPreview(screen)}
             >
               <p className="text-[10px] text-gray-500 uppercase tracking-widest">{screen.name}</p>
-              <p className="text-[11px] text-blue-400 truncate">{url}</p>
+              <a 
+                href={url} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-[11px] text-blue-400 truncate hover:underline block"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {url}
+              </a>
               <div className="flex flex-wrap gap-1">
                 {screen.media?.length === 0 ? (
                   <span className="text-[10px] text-gray-600 italic">No media</span>
@@ -69,9 +78,14 @@ export default function LinksPage() {
               <span className="w-2.5 h-2.5 rounded-full bg-[#e05c3a]" />
               <span className="w-2.5 h-2.5 rounded-full bg-[#e0a030]" />
               <span className="w-2.5 h-2.5 rounded-full bg-[#3ab060]" />
-              <span className="flex-1 bg-[#111] rounded px-3 py-1 text-[10px] text-blue-400 truncate">
+              <a 
+                href={`${baseUrl}/view/screen/${preview.id}`}
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="flex-1 bg-[#111] rounded px-3 py-1 text-[10px] text-blue-400 truncate hover:underline block"
+              >
                 {`${baseUrl}/view/screen/${preview.id}`}
-              </span>
+              </a>
               <button className="text-gray-500 hover:text-gray-200 text-xs ml-2" onClick={() => setPreview(null)}>✕</button>
             </div>
             <div className="bg-[#0d0d0d] min-h-[200px] flex flex-col items-center justify-center gap-3 p-6">
